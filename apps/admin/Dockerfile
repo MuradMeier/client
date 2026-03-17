@@ -36,18 +36,17 @@ RUN pnpm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Копируем standalone (сервер и зависимости)
+# Копируем всё необходимое (как у вас и было)
 COPY --from=builder /app/apps/admin/.next/standalone ./
-
-# Копируем статические файлы из .next/static в правильное место
 COPY --from=builder /app/apps/admin/.next/static ./apps/admin/.next/static
-
-# Копируем public файлы
 COPY --from=builder /app/apps/admin/public ./apps/admin/public
 
 WORKDIR /app/apps/admin
 
-EXPOSE 3000
-ENV PORT=${PORT:-3000}
+# ВАЖНО: Не указываем PORT явно. Railway сам её подставит.
+# Но мы указываем, на каком интерфейсе слушать.
 ENV HOST=0.0.0.0
-CMD ["node", "server.js"]
+EXPOSE ${PORT:-3000}
+
+# Команда запуска: берём порт из переменной окружения Railway.
+CMD ["sh", "-c", "PORT=$PORT node server.js"]
