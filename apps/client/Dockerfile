@@ -6,7 +6,7 @@ RUN npm i -g pnpm@9.15.0
 FROM base AS deps
 WORKDIR /app
 
-# Копируем манифесты пакетов
+# Копируем все манифесты, необходимые для установки зависимостей
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/client/package.json ./apps/client/
 COPY packages/ ./packages/
@@ -18,13 +18,17 @@ RUN pnpm install --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
-# Копируем всё из deps (уже есть node_modules, packages, манифесты)
-COPY --from=deps /app .
+# Копируем node_modules (с сохранением симлинков) и packages из deps
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages ./packages
 
-# Копируем все исходники (перезапишут файлы, но не затронут node_modules)
-COPY . .
+# Копируем корневые файлы проекта (package.json, pnpm-workspace.yaml)
+COPY package.json pnpm-workspace.yaml ./
 
-# Аргументы для переменных окружения, необходимых при сборке
+# Копируем исходники клиента
+COPY apps/client ./apps/client
+
+# Аргументы для переменных окружения
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_DADATA_API_KEY
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
