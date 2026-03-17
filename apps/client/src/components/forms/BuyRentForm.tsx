@@ -22,6 +22,9 @@ interface BuyRentFormProps {
 }
 
 export default function BuyRentForm({ action, objectType }: BuyRentFormProps) {
+    console.log('ObjectCard:', ObjectCard);
+console.log('LocationFields:', LocationFields);
+console.log('AddressSuggest:', AddressSuggest);
   const { register, watch, setValue, getValues } = useForm({
     defaultValues: {
       region: '',

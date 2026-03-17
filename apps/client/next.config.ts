@@ -12,9 +12,9 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   turbopack: {},
-  typescript: {
-    ignoreBuildErrors: true, // временно, чтобы пройти сборку
-  },
+  //typescript: {
+   // ignoreBuildErrors: true, // временно, чтобы пройти сборку
+  //},
 };
 
 export default nextConfig;
