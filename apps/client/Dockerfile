@@ -6,29 +6,26 @@ RUN npm i -g pnpm@9.15.0
 FROM base AS deps
 WORKDIR /app
 
-# Копируем все манифесты, необходимые для установки зависимостей
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/client/package.json ./apps/client/
 COPY packages/ ./packages/
 
-# Устанавливаем все зависимости (включая workspace)
 RUN pnpm install --frozen-lockfile
 
 # Этап сборки
 FROM base AS builder
 WORKDIR /app
 
-# Копируем node_modules (с сохранением симлинков) и packages из deps
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages ./packages
+# Копируем всё из deps (уже есть node_modules, packages, манифесты)
+COPY --from=deps /app .
 
-# Копируем корневые файлы проекта (package.json, pnpm-workspace.yaml)
-COPY package.json pnpm-workspace.yaml ./
+# Копируем все исходники (перезапишут файлы, но не затронут node_modules)
+COPY . .
 
-# Копируем исходники клиента
-COPY apps/client ./apps/client
+# Принудительно переустанавливаем зависимости, чтобы восстановить симлинки
+RUN pnpm install --frozen-lockfile
 
-# Аргументы для переменных окружения
+# Аргументы для переменных окружения, необходимых при сборке
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_DADATA_API_KEY
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
@@ -42,13 +39,8 @@ RUN pnpm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Копируем standalone-папку
 COPY --from=builder /app/apps/client/.next/standalone ./
-
-# Копируем статические файлы
 COPY --from=builder /app/apps/client/.next/static ./apps/client/.next/static
-
-# Копируем public-файлы
 COPY --from=builder /app/apps/client/public ./apps/client/public
 
 WORKDIR /app/apps/client
