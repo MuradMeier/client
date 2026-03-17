@@ -22,7 +22,8 @@ COPY --from=deps /app .
 # Копируем все исходники (перезапишут файлы, но не затронут node_modules)
 COPY . .
 
-# Принудительно переустанавливаем зависимости, чтобы восстановить симлинки
+# Переходим в папку клиента и принудительно устанавливаем зависимости (для восстановления симлинков)
+WORKDIR /app/apps/client
 RUN pnpm install --frozen-lockfile
 
 # Аргументы для переменных окружения, необходимых при сборке
@@ -32,7 +33,6 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_DADATA_API_KEY=$NEXT_PUBLIC_DADATA_API_KEY
 
 # Собираем клиент
-WORKDIR /app/apps/client
 RUN pnpm run build
 
 # Финальный образ
