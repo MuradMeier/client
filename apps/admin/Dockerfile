@@ -17,9 +17,16 @@ RUN pnpm install --frozen-lockfile
 # Этап сборки
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages ./packages
+
+# Копируем всё из deps (уже есть node_modules, packages, package.json для apps/admin)
+COPY --from=deps /app .
+
+# Копируем оставшиеся исходники (перезапишут файлы, но не затронут node_modules)
 COPY . .
+
+# Собираем админку
+WORKDIR /app/apps/admin
+RUN pnpm run build
 
 # Собираем админку
 WORKDIR /app/apps/admin
