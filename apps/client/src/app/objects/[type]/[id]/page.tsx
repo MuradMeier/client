@@ -31,7 +31,14 @@ const getEndpoint = (type: string, id: string) => {
 // Поля, которые уже показаны в блоке "Характеристики" и не должны дублироваться
 const getExcludeFields = (type: string) => {
   const common = [
-    'mnogoetazhka', 'nomer_kvartiry', 'koordinaty',
+    'mnogoetazhka','predlozheniya_arendy',
+'predlozheniya_prodazhi', // если есть
+'raion',
+'sozdal_imya',
+'tip_sanuzla_display',
+'balkon_ili_loggia_display',
+'tekhnika_display',
+'mebel_display', 'nomer_kvartiry', 'koordinaty',
     'kolichestvo_komnat', 'zhilaya_ploshad', 'etazh',
     'kolichestvo_sanuzlov', 'tip_komnat', 'sozdano', 'obnovleno',
     'region', 'gorod', 'city', 'street', 'house_number', 'apartment_number',
