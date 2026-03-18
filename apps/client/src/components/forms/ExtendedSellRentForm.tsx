@@ -393,8 +393,6 @@ export default function ExtendedSellRentForm({
                 )}
               />
             </div>
-              />
-            )}
             <Separator className="my-4" />
 
             {/* Поля для квартиры/комнаты */}
