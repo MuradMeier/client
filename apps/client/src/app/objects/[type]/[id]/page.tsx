@@ -31,20 +31,38 @@ const getEndpoint = (type: string, id: string) => {
 // Поля, которые уже показаны в блоке "Характеристики" и не должны дублироваться
 const getExcludeFields = (type: string) => {
   const common = [
-    'mnogoetazhka','predlozheniya_arendy',
-'predlozheniya_prodazhi', // если есть
-'raion',
-'sozdal_imya',
-'tip_sanuzla_display',
-'balkon_ili_loggia_display',
-'tekhnika_display',
-'mebel_display', 'nomer_kvartiry', 'koordinaty',
-    'kolichestvo_komnat', 'zhilaya_ploshad', 'etazh',
-    'kolichestvo_sanuzlov', 'tip_komnat', 'sozdano', 'obnovleno',
-    'region', 'gorod', 'city', 'street', 'house_number', 'apartment_number',
-    'quantity_rooms', 'home_area', 'floor', 'rooms_type', 'bathroom_quantity',
-    'mnogoetazhka_detail'
-  ];
+  // Технические и служебные поля
+  'id', 'sozdano', 'obnovleno', 'sozdal_imya',
+  'predlozheniya_arendy', 'predlozheniya_prodazhi',
+  'obrazy', 'komnaty',
+
+  // Поля, связанные с местоположением (ID)
+  'region', 'gorod', 'raion', 'mikroraion', 'metro_stantsii',
+  'mnogoetazhka', 'mnogoetazhka_detail',
+
+  // Поля, которые уже выведены в основных характеристиках
+  'kolichestvo_komnat', 'zhilaya_ploshad', 'etazh',
+  'kolichestvo_sanuzlov', 'tip_komnat', 'remont', 'renovation',
+  'quantity_rooms', 'home_area', 'floor', 'rooms_type',
+  'bathroom_quantity',
+  'totalFloors', 'elevator', 'floor_in_house', 'year_construction',
+  'land_area', 'cadastral_number', 'land_type', 'is_water', 'is_gas', 'is_severage',
+  'city', 'street', 'house_number', 'apartment_number',
+  'nomer_kvartiry', 'nomer_uchastka', 'kadastr_nomer', 'ploshad_uchastka',
+  'voda', 'kanalizatsiya', 'gaz', 'tip_uchastka',
+
+  // Поля с суффиксами _display (их исходные ключи не нужны)
+  'tip_sanuzla_display', 'balkon_ili_loggia_display',
+  'tekhnika_display', 'mebel_display',
+
+  // Поля, которые могут быть массивами/объектами, не предназначенными для прямого показа
+  'tip_sanuzla', 'balkon_ili_loggia', 'tekhnika', 'mebel',
+  'mestopolozhenie_sanuzla', 'kommunikatsii', 'tip_vody', 'tip_kanalizatsii',
+
+  // Дополнительно для разных типов
+  'gorod_tekst', 'ulitsa', 'koordinaty',
+  'opisanie', // если описание уже показано отдельно
+];
   if (type === 'flat') {
     return [...common, 'totalFloors', 'elevator'];
   }
