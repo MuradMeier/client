@@ -274,19 +274,8 @@ export default function ExtendedSellRentForm({
   }
   setAddressInput(fullAddress);
   setSelectedAddress(data);
-  setValue('exactAddress', fullAddress);
+  form.setValue('address', fullAddress);
 };
-
-    // Заполняем поля формы
-    form.setValue('city', parts.city || '');
-    form.setValue('street', parts.street || '');
-    form.setValue('houseNumber', parts.house || '');
-    form.setValue('korpus', parts.korpus || '');
-    form.setValue('stroenie', parts.stroenie || '');
-    if (parts.apartment) {
-      form.setValue('apartmentNumber', parts.apartment);
-    }
-  };
 
   function parseAddressData(data: any): AddressParts & { regionName?: string; cityName?: string } {
     return {

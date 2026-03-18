@@ -193,19 +193,7 @@ console.log('AddressSuggest:', AddressSuggest);
   return (
     <YMaps query={{ apikey: process.env.NEXT_PUBLIC_YANDEX_API_KEY || '' }}>
       <div className="space-y-8 relative pb-20">
-        <LocationFields register={register} watch={watch} setValue={setValue} />
-
-        {/* Поле точного адреса с проверкой региона */}
-        <div className="space-y-2">
-          <Label>Точный адрес</Label>
-          <AddressSuggest
-            value={addressInput}
-            onChange={setAddressInput}
-            onSelect={handleAddressSelect}
-            placeholder="Начните вводить адрес..."
-          />
-          <p className="text-xs text-muted-foreground">Выберите адрес из подсказок – мы проверим, работаем ли в этом регионе</p>
-        </div>
+        <LocationFields register={register} watch={watch} setValue={setValue} onAddressSelect={handleAddressSelect} />
 
         {/* Блок "Параметры объекта" */}
         <div className="space-y-4 border p-4 rounded-lg">

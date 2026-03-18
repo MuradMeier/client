@@ -17,6 +17,7 @@ interface LocationFieldsProps {
   register: UseFormRegister<any>;
   watch: UseFormWatch<any>;
   setValue: UseFormSetValue<any>;
+  onAddressSelect?: (fullAddress: string, data: any) => void;
 }
 
 // Компонент для подсказок адреса
@@ -382,13 +383,19 @@ export function LocationFields({ register, watch, setValue }: LocationFieldsProp
       )}
 
       {/* Точный адрес с подсказками */}
-      <div className="space-y-2">
-        <Label>Точный адрес</Label>
-        <AddressSuggest
-          value={exactAddress}
-          onChange={(val) => setValue('exactAddress', val)}
-          onSelect={(val) => setValue('exactAddress', val)}
-        />
+        <div className="space-y-2">
+    <Label>Точный адрес</Label>
+    <AddressSuggest
+      value={exactAddress}
+      onChange={(val) => setValue('exactAddress', val)}
+      onSelect={(val, data) => {
+        if (onAddressSelect) {
+          onAddressSelect(val, data); // вызываем внешний обработчик, если передан
+        } else {
+          setValue('exactAddress', val); // поведение по умолчанию
+        }
+      }}
+    />
       </div>
 
       {exactAddress && (
