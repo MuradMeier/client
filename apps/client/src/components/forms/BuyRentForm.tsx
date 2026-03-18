@@ -159,12 +159,12 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
       address: `${item.city}, ${item.street} ${item.house_number}`,
       image: item.images?.[0]?.izobrazhenie,
     });
-  } else { // Комната
+  } else {
     endpoint = '/rooms/';
     resultMapper = (item: any) => ({
       id: item.id,
       type: 'room',
-      title: `Комната ${item.ploshad_komnaty || item.area} м²`, // используем нужное поле
+      title: `Комната ${item.ploshad_komnaty || item.area} м²`,
       price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
       area: item.ploshad_komnaty || item.area,
       address: `${item.city}, ${item.street} ${item.house_number}`,
@@ -173,8 +173,7 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
   }
   const res = await api.get(`${endpoint}?${params.toString()}`);
   results = (res.data.results || res.data || []).map(resultMapper);
-}
-      } else if (objectType === 'Дом') {
+} else if (objectType === 'Дом') {
         const res = await api.get(`/detachedhouses/?${params.toString()}`);
         results = (res.data.results || res.data || []).map((item: any) => ({
           id: item.id,
