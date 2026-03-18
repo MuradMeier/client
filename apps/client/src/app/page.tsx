@@ -7,13 +7,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import SellRentForm from '@/components/forms/SellRentForm';
 import BuyRentForm from '@/components/forms/BuyRentForm';
 import { Building2, Home, MapPin, Search } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
 
 const actionOptions = ['Продать', 'Сдать', 'Купить', 'Снять'];
 const objectOptions = ['Комната', 'Квартира', 'Дом', 'Участок'];
 
 export default function HomePage() {
-  const [action, setAction] = useState('');
-  const [objectType, setObjectType] = useState('');
+  const [action, setAction] = useState(searchParams.get('action') || '');
+const [objectType, setObjectType] = useState(searchParams.get('objectType') || '');
+useEffect(() => {
+  const params = new URLSearchParams(searchParams.toString());
+  if (action) {
+    params.set('action', action);
+  } else {
+    params.delete('action');
+  }
+  if (objectType) {
+    params.set('objectType', objectType);
+  } else {
+    params.delete('objectType');
+  }
+  // Обновляем URL без перезагрузки страницы
+  router.replace(`?${params.toString()}`, { scroll: false });
+}, [action, objectType, searchParams, router]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
