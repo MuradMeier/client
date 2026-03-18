@@ -146,17 +146,34 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
     try {
       let results: SearchResult[] = [];
       if (objectType === 'Квартира' || objectType === 'Комната') {
-        const res = await api.get(`/flats/?${params.toString()}`);
-        results = (res.data.results || res.data || []).map((item: any) => ({
-          id: item.id,
-          type: 'flat',
-          title: `Квартира ${item.quantity_rooms}-комнатная`,
-          price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
-          area: item.home_area,
-          rooms: item.quantity_rooms,
-          address: `${item.city}, ${item.street} ${item.house_number}`,
-          image: item.images?.[0]?.izobrazhenie,
-        }));
+  let endpoint, resultMapper;
+  if (objectType === 'Квартира') {
+    endpoint = '/flats/';
+    resultMapper = (item: any) => ({
+      id: item.id,
+      type: 'flat',
+      title: `Квартира ${item.quantity_rooms}-комнатная`,
+      price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
+      area: item.home_area,
+      rooms: item.quantity_rooms,
+      address: `${item.city}, ${item.street} ${item.house_number}`,
+      image: item.images?.[0]?.izobrazhenie,
+    });
+  } else { // Комната
+    endpoint = '/rooms/';
+    resultMapper = (item: any) => ({
+      id: item.id,
+      type: 'room',
+      title: `Комната ${item.ploshad_komnaty || item.area} м²`, // используем нужное поле
+      price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
+      area: item.ploshad_komnaty || item.area,
+      address: `${item.city}, ${item.street} ${item.house_number}`,
+      image: item.images?.[0]?.izobrazhenie,
+    });
+  }
+  const res = await api.get(`${endpoint}?${params.toString()}`);
+  results = (res.data.results || res.data || []).map(resultMapper);
+}
       } else if (objectType === 'Дом') {
         const res = await api.get(`/detachedhouses/?${params.toString()}`);
         results = (res.data.results || res.data || []).map((item: any) => ({
