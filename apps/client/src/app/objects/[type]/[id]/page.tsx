@@ -75,7 +75,11 @@ export default function ObjectDetailPage() {
     },
     enabled: !!endpoint,
   });
-
+    useEffect(() => {
+  if (object) {
+    console.log('Все ключи объекта:', Object.keys(object));
+  }
+}, [object]);
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
