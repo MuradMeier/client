@@ -3,7 +3,7 @@
 
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Header from '@/components/layout/Header';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import SellRentForm from '@/components/forms/SellRentForm';
@@ -16,7 +16,37 @@ const objectOptions = ['Комната', 'Квартира', 'Дом', 'Учас
 function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  // после получения searchParams
+const initialFilterValues = useMemo(() => ({
+  region: searchParams.get('region') || '',
+  city: searchParams.get('city') || '',
+  cityRadius: searchParams.get('cityRadius') || '',
+  district: searchParams.get('district') || '',
+  microdistrict: searchParams.get('microdistrict') || '',
+  metro: searchParams.get('metro') || '',
+  exactAddress: searchParams.get('exactAddress') || '',
+  addressRadius: searchParams.get('addressRadius') || '',
+  priceFrom: searchParams.get('priceFrom') || '',
+  priceTo: searchParams.get('priceTo') || '',
+  areaFrom: searchParams.get('areaFrom') || '',
+  areaTo: searchParams.get('areaTo') || '',
+  rooms: searchParams.get('rooms') || '',
+  floorNotFirst: searchParams.get('floorNotFirst') === 'true',
+  floorNotLast: searchParams.get('floorNotLast') === 'true',
+  renovation: searchParams.get('renovation') || '',
+  withChildren: searchParams.get('withChildren') === 'true',
+  withPets: searchParams.get('withPets') === 'true',
+  smoking: searchParams.get('smoking') === 'true',
+  sleepingPlaces: searchParams.get('sleepingPlaces') || '',
+  houseType: searchParams.get('houseType') || '',
+  yearBuiltFrom: searchParams.get('yearBuiltFrom') || '',
+  landAreaFrom: searchParams.get('landAreaFrom') || '',
+  landAreaTo: searchParams.get('landAreaTo') || '',
+  water: searchParams.get('water') === 'true',
+  gas: searchParams.get('gas') === 'true',
+  sewerage: searchParams.get('sewerage') === 'true',
+  landType: searchParams.get('landType') || '',
+}), [searchParams]);
   const [action, setAction] = useState(searchParams.get('action') || '');
   const [objectType, setObjectType] = useState(searchParams.get('objectType') || '');
 
@@ -76,7 +106,7 @@ function HomeContent() {
               {action === 'Продать' || action === 'Сдать' ? (
                 <SellRentForm action={action} objectType={objectType} />
               ) : (
-                <BuyRentForm action={action} objectType={objectType} />
+                <BuyRentForm action={action} objectType={objectType} initialValues={initialFilterValues} />
               )}
             </div>
           )}

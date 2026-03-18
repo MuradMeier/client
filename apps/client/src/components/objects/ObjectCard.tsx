@@ -11,9 +11,10 @@ interface ObjectCardProps {
   item: SearchResult;
   filterAction?: string;
   filterObjectType?: string;
+  filterParams?: Record<string, any>; // добавили
 }
 
-export default function ObjectCard({ item, filterAction, filterObjectType }: ObjectCardProps) {
+export default function ObjectCard({ item, filterAction, filterObjectType, filterParams }: ObjectCardProps) {
   console.log('ObjectCard item:', JSON.stringify(item, null, 2));
   const formattedDate = item.created_at
     ? format(new Date(item.created_at), 'dd.MM.yyyy', { locale: ru })
@@ -24,6 +25,13 @@ export default function ObjectCard({ item, filterAction, filterObjectType }: Obj
   const query = new URLSearchParams();
   if (filterAction) query.set('action', filterAction);
   if (filterObjectType) query.set('objectType', filterObjectType);
+  if (filterParams) {
+    Object.entries(filterParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        query.set(key, String(value));
+      }
+    });
+  }
   const href = `/objects/${item.type}/${item.id}${query.toString() ? '?' + query.toString() : ''}`;
 
   return (

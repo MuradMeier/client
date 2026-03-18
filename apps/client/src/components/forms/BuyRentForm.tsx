@@ -19,13 +19,14 @@ import { ObjectCard, LocationFields } from '@repo/ui';
 interface BuyRentFormProps {
   action: string;
   objectType: string;
+  initialValues?: any;
 }
 
-export default function BuyRentForm({ action, objectType }: BuyRentFormProps) {
+export default function BuyRentForm({ action, objectType, initialValues }: BuyRentFormProps) {
     console.log('ObjectCard:', ObjectCard);
 console.log('LocationFields:', LocationFields);
 console.log('AddressSuggest:', AddressSuggest);
-  const { register, watch, setValue, getValues } = useForm({
+  const { register, watch, setValue, getValues, reset } = useForm({
     defaultValues: {
       region: '',
       city: '',
@@ -57,7 +58,11 @@ console.log('AddressSuggest:', AddressSuggest);
       landType: '',
     },
   });
-
+    useEffect(() => {
+  if (initialValues) {
+    reset(initialValues);
+  }
+}, [initialValues, reset]);
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [addressInput, setAddressInput] = useState('');
@@ -371,13 +376,43 @@ console.log('AddressSuggest:', AddressSuggest);
         {results.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
             {results.map((item) => (
-              <ObjectCard
-                  key={item.id}
-                  item={item}
-                  filterAction={action}
-                  filterObjectType={objectType}
-                />
-            ))}
+  <ObjectCard
+    key={item.id}
+    item={item}
+    filterAction={action}
+    filterObjectType={objectType}
+    filterParams={{
+      region: getValues('region'),
+      city: getValues('city'),
+      cityRadius: getValues('cityRadius'),
+      district: getValues('district'),
+      microdistrict: getValues('microdistrict'),
+      metro: getValues('metro'),
+      exactAddress: getValues('exactAddress'),
+      addressRadius: getValues('addressRadius'),
+      priceFrom: getValues('priceFrom'),
+      priceTo: getValues('priceTo'),
+      areaFrom: getValues('areaFrom'),
+      areaTo: getValues('areaTo'),
+      rooms: getValues('rooms'),
+      floorNotFirst: getValues('floorNotFirst'),
+      floorNotLast: getValues('floorNotLast'),
+      renovation: getValues('renovation'),
+      withChildren: getValues('withChildren'),
+      withPets: getValues('withPets'),
+      smoking: getValues('smoking'),
+      sleepingPlaces: getValues('sleepingPlaces'),
+      houseType: getValues('houseType'),
+      yearBuiltFrom: getValues('yearBuiltFrom'),
+      landAreaFrom: getValues('landAreaFrom'),
+      landAreaTo: getValues('landAreaTo'),
+      water: getValues('water'),
+      gas: getValues('gas'),
+      sewerage: getValues('sewerage'),
+      landType: getValues('landType'),
+    }}
+  />
+))}
           </div>
         )}
 
