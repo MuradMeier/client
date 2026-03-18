@@ -65,7 +65,13 @@ export default function ObjectCard({ item }: ObjectCardProps) {
         )}
       </CardContent>
       <CardFooter className="p-5 pt-0">
-        <Link href={`/objects/${item.type}/${item.id}`} passHref className="w-full">
+        <Link
+          href={`/objects/${item.type}/${item.id}`}
+          passHref
+          className="w-full"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Button variant="outline" className="w-full border-blue-200 hover:bg-blue-50">
             Подробнее
           </Button>
