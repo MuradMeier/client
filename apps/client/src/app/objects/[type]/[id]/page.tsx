@@ -13,6 +13,20 @@ import SellRentForm from '@/components/forms/SellRentForm';
 import { ExtendedDataDisplay } from '@/components/forms/ExtendedDataDisplay'; // путь к вашему скопированному файлу
 import api from '@repo/api-client';
 
+const renovationMap: Record<string, string> = {
+  euro: 'Евро',
+  cosmetic: 'Косметический',
+  capital: 'Капитальный',
+  designer: 'Дизайнерский',
+};
+
+const houseTypeMap: Record<string, string> = {
+  brick: 'Кирпичный',
+  monolith: 'Монолитный',
+  panel: 'Панельный',
+  // при необходимости добавьте другие
+};
+
 const typeLabels: Record<string, string> = {
   flat: 'Квартира',
   detachedhouse: 'Дом',
@@ -160,7 +174,7 @@ export default function ObjectDetailPage() {
                     {object.floor && <div><strong>Этаж:</strong> {object.floor}</div>}
                     {object.totalFloors && <div><strong>Этажность дома:</strong> {object.totalFloors}</div>}
                     {object.rooms_type && <div><strong>Тип комнат:</strong> {object.rooms_type === 'separate' ? 'Раздельные' : 'Смежные'}</div>}
-                    {object.renovation && <div><strong>Ремонт:</strong> {object.renovation}</div>}
+                    {object.renovation && <div><strong>Ремонт:</strong> {renovationMap[object.renovation] || object.renovation}</div>}
                     {object.bathroom_quantity && <div><strong>Санузлов:</strong> {object.bathroom_quantity}</div>}
                   </>
                 )}
