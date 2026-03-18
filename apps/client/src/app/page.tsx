@@ -1,36 +1,34 @@
-// apps/site/app/page.tsx
+// apps/client/src/app/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import SellRentForm from '@/components/forms/SellRentForm';
 import BuyRentForm from '@/components/forms/BuyRentForm';
-import { Building2, Home, MapPin, Search } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { Building2, Home, Search } from 'lucide-react';
 
 const actionOptions = ['Продать', 'Сдать', 'Купить', 'Снять'];
 const objectOptions = ['Комната', 'Квартира', 'Дом', 'Участок'];
 
-export default function HomePage() {
+function HomeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [action, setAction] = useState(searchParams.get('action') || '');
-const [objectType, setObjectType] = useState(searchParams.get('objectType') || '');
-useEffect(() => {
-  const params = new URLSearchParams(searchParams.toString());
-  if (action) {
-    params.set('action', action);
-  } else {
-    params.delete('action');
-  }
-  if (objectType) {
-    params.set('objectType', objectType);
-  } else {
-    params.delete('objectType');
-  }
-  // Обновляем URL без перезагрузки страницы
-  router.replace(`?${params.toString()}`, { scroll: false });
-}, [action, objectType, searchParams, router]);
+  const [objectType, setObjectType] = useState(searchParams.get('objectType') || '');
+
+  // Сохраняем выбор в URL
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (action) params.set('action', action);
+    else params.delete('action');
+    if (objectType) params.set('objectType', objectType);
+    else params.delete('objectType');
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }, [action, objectType, searchParams, router]);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
@@ -110,5 +108,13 @@ useEffect(() => {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={<div>Загрузка...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

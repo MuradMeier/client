@@ -371,7 +371,12 @@ console.log('AddressSuggest:', AddressSuggest);
         {results.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
             {results.map((item) => (
-              <ObjectCard key={item.id} item={item} />
+              <ObjectCard
+                  key={item.id}
+                  item={item}
+                  filterAction={action}
+                  filterObjectType={objectType}
+                />
             ))}
           </div>
         )}
