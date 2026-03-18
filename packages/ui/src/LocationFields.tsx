@@ -21,7 +21,7 @@ interface LocationFieldsProps {
 }
 
 // Компонент для подсказок адреса
-const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange: (val: string) => void; onSelect: (val: string) => void }) => {
+const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange: (val: string) => void; onSelect: (fullAddress: string, data: any) => void; }) => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -85,7 +85,7 @@ const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange
               key={index}
               className="px-3 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
               onClick={() => {
-                onSelect(suggestion.value);
+                onSelect(suggestion.value, suggestion.data);
                 setShowSuggestions(false);
               }}
             >
