@@ -393,45 +393,8 @@ export default function ExtendedSellRentForm({
                 )}
               />
             </div>
-
-            {/* Условные поля для номера квартиры/участка */}
-            {(objectType === 'Квартира' || objectType === 'Комната') && (
-              <FormField
-                control={form.control}
-                name="apartmentNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Номер квартиры</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="42"
-                        value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.value || undefined)}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
               />
             )}
-            {objectType === 'Участок' && (
-              <FormField
-                control={form.control}
-                name="plotNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Номер участка</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="12"
-                        value={field.value ?? ''}
-                        onChange={(e) => field.onChange(e.target.value || undefined)}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            )}
-
             <Separator className="my-4" />
 
             {/* Поля для квартиры/комнаты */}
