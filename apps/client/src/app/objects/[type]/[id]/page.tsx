@@ -31,16 +31,16 @@ const getEndpoint = (type: string, id: string) => {
 // Поля, которые уже показаны в блоке "Характеристики" и не должны дублироваться
 const getExcludeFields = (type: string) => {
   const common = [
-  // Технические и служебные поля
+  // Технические и служебные
   'id', 'sozdano', 'obnovleno', 'sozdal_imya',
   'predlozheniya_arendy', 'predlozheniya_prodazhi',
   'obrazy', 'komnaty',
 
-  // Поля, связанные с местоположением (ID)
+  // Поля-связи (ID)
   'region', 'gorod', 'raion', 'mikroraion', 'metro_stantsii',
   'mnogoetazhka', 'mnogoetazhka_detail',
 
-  // Поля, которые уже выведены в основных характеристиках
+  // Поля, уже отображённые в основных характеристиках
   'kolichestvo_komnat', 'zhilaya_ploshad', 'etazh',
   'kolichestvo_sanuzlov', 'tip_komnat', 'remont', 'renovation',
   'quantity_rooms', 'home_area', 'floor', 'rooms_type',
@@ -51,18 +51,14 @@ const getExcludeFields = (type: string) => {
   'nomer_kvartiry', 'nomer_uchastka', 'kadastr_nomer', 'ploshad_uchastka',
   'voda', 'kanalizatsiya', 'gaz', 'tip_uchastka',
 
-  // Поля с суффиксами _display (их исходные ключи не нужны)
+  // Поля с суффиксом _display (они не нужны, если мы показываем исходные)
   'tip_sanuzla_display', 'balkon_ili_loggia_display',
   'tekhnika_display', 'mebel_display',
 
-  // Поля, которые могут быть массивами/объектами, не предназначенными для прямого показа
-  'tip_sanuzla', 'balkon_ili_loggia', 'tekhnika', 'mebel',
-  'mestopolozhenie_sanuzla', 'kommunikatsii', 'tip_vody', 'tip_kanalizatsii',
-
-  // Дополнительно для разных типов
+  // Поля, которые могут быть лишними в доп. характеристиках
   'gorod_tekst', 'ulitsa', 'koordinaty',
-  'opisanie', // если описание уже показано отдельно
 ];
+
   if (type === 'flat') {
     return [...common, 'totalFloors', 'elevator'];
   }
