@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { YMaps } from '@pbe/react-yandex-maps';
 import { Button } from '@/components/ui/button';
@@ -20,12 +20,14 @@ interface BuyRentFormProps {
   action: string;
   objectType: string;
   initialValues?: any;
+  onSearch?: (values: any) => void;
 }
 
-export default function BuyRentForm({ action, objectType, initialValues }: BuyRentFormProps) {
-    console.log('ObjectCard:', ObjectCard);
-console.log('LocationFields:', LocationFields);
-console.log('AddressSuggest:', AddressSuggest);
+export default function BuyRentForm({ action, objectType, initialValues, onSearch }: BuyRentFormProps) {
+  console.log('ObjectCard:', ObjectCard);
+  console.log('LocationFields:', LocationFields);
+  console.log('AddressSuggest:', AddressSuggest);
+
   const { register, watch, setValue, getValues, reset } = useForm({
     defaultValues: {
       region: '',
@@ -58,11 +60,13 @@ console.log('AddressSuggest:', AddressSuggest);
       landType: '',
     },
   });
-    useEffect(() => {
-  if (initialValues) {
-    reset(initialValues);
-  }
-}, [initialValues, reset]);
+
+  useEffect(() => {
+    if (initialValues) {
+      reset(initialValues);
+    }
+  }, [initialValues, reset]);
+
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [addressInput, setAddressInput] = useState('');
@@ -91,23 +95,23 @@ console.log('AddressSuggest:', AddressSuggest);
   };
 
   const handleAddressSelect = (fullAddress: string, data: any) => {
-  console.log('Selected address data:', data);
-  const regionCode = data.region_kladr_id?.substring(0, 2);
-  console.log('Region code:', regionCode);
-  console.log('Allowed codes:', settings?.allowed_region_codes);
-  if (regionCode && !settings?.allowed_region_codes.includes(regionCode)) {
-    toast.error('К сожалению, мы не работаем в данном регионе');
-    setAddressInput('');
-    setSelectedAddress(null);
-    setValue('exactAddress', '');
-    return;
-  }
-  setAddressInput(fullAddress);
-  setSelectedAddress(data);
-  setValue('exactAddress', fullAddress);
-};
+    console.log('Selected address data:', data);
+    const regionCode = data.region_kladr_id?.substring(0, 2);
+    console.log('Region code:', regionCode);
+    console.log('Allowed codes:', settings?.allowed_region_codes);
+    if (regionCode && !settings?.allowed_region_codes.includes(regionCode)) {
+      toast.error('К сожалению, мы не работаем в данном регионе');
+      setAddressInput('');
+      setSelectedAddress(null);
+      setValue('exactAddress', '');
+      return;
+    }
+    setAddressInput(fullAddress);
+    setSelectedAddress(data);
+    setValue('exactAddress', fullAddress);
+  };
 
-  const handleSearch = async () => {
+  const handleSearch = useCallback(async () => {
     const values = getValues();
     setIsSearching(true);
     const params = new URLSearchParams();
@@ -179,6 +183,10 @@ console.log('AddressSuggest:', AddressSuggest);
       }
       if (isMounted.current) {
         setResults(results);
+        // Обновляем URL после успешного поиска
+        if (onSearch) {
+          onSearch(getValues());
+        }
       }
     } catch (error) {
       if (isMounted.current) {
@@ -189,7 +197,19 @@ console.log('AddressSuggest:', AddressSuggest);
         setIsSearching(false);
       }
     }
-  };
+  }, [action, objectType, getValues, isMounted, onSearch]);
+
+  // Автоматический поиск при загрузке страницы, если есть параметры в URL
+  useEffect(() => {
+    if (initialValues) {
+      const hasAnyValue = Object.values(initialValues).some(v =>
+        v !== '' && v !== false && v !== undefined && v !== null
+      );
+      if (hasAnyValue) {
+        handleSearch();
+      }
+    }
+  }, [initialValues, handleSearch]);
 
   if (!settings) {
     return <Skeleton className="h-96 w-full" />;
@@ -376,43 +396,43 @@ console.log('AddressSuggest:', AddressSuggest);
         {results.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
             {results.map((item) => (
-  <ObjectCard
-    key={item.id}
-    item={item}
-    filterAction={action}
-    filterObjectType={objectType}
-    filterParams={{
-      region: getValues('region'),
-      city: getValues('city'),
-      cityRadius: getValues('cityRadius'),
-      district: getValues('district'),
-      microdistrict: getValues('microdistrict'),
-      metro: getValues('metro'),
-      exactAddress: getValues('exactAddress'),
-      addressRadius: getValues('addressRadius'),
-      priceFrom: getValues('priceFrom'),
-      priceTo: getValues('priceTo'),
-      areaFrom: getValues('areaFrom'),
-      areaTo: getValues('areaTo'),
-      rooms: getValues('rooms'),
-      floorNotFirst: getValues('floorNotFirst'),
-      floorNotLast: getValues('floorNotLast'),
-      renovation: getValues('renovation'),
-      withChildren: getValues('withChildren'),
-      withPets: getValues('withPets'),
-      smoking: getValues('smoking'),
-      sleepingPlaces: getValues('sleepingPlaces'),
-      houseType: getValues('houseType'),
-      yearBuiltFrom: getValues('yearBuiltFrom'),
-      landAreaFrom: getValues('landAreaFrom'),
-      landAreaTo: getValues('landAreaTo'),
-      water: getValues('water'),
-      gas: getValues('gas'),
-      sewerage: getValues('sewerage'),
-      landType: getValues('landType'),
-    }}
-  />
-))}
+              <ObjectCard
+                key={item.id}
+                item={item}
+                filterAction={action}
+                filterObjectType={objectType}
+                filterParams={{
+                  region: getValues('region'),
+                  city: getValues('city'),
+                  cityRadius: getValues('cityRadius'),
+                  district: getValues('district'),
+                  microdistrict: getValues('microdistrict'),
+                  metro: getValues('metro'),
+                  exactAddress: getValues('exactAddress'),
+                  addressRadius: getValues('addressRadius'),
+                  priceFrom: getValues('priceFrom'),
+                  priceTo: getValues('priceTo'),
+                  areaFrom: getValues('areaFrom'),
+                  areaTo: getValues('areaTo'),
+                  rooms: getValues('rooms'),
+                  floorNotFirst: getValues('floorNotFirst'),
+                  floorNotLast: getValues('floorNotLast'),
+                  renovation: getValues('renovation'),
+                  withChildren: getValues('withChildren'),
+                  withPets: getValues('withPets'),
+                  smoking: getValues('smoking'),
+                  sleepingPlaces: getValues('sleepingPlaces'),
+                  houseType: getValues('houseType'),
+                  yearBuiltFrom: getValues('yearBuiltFrom'),
+                  landAreaFrom: getValues('landAreaFrom'),
+                  landAreaTo: getValues('landAreaTo'),
+                  water: getValues('water'),
+                  gas: getValues('gas'),
+                  sewerage: getValues('sewerage'),
+                  landType: getValues('landType'),
+                }}
+              />
+            ))}
           </div>
         )}
 
