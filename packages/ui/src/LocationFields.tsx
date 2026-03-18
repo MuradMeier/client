@@ -99,7 +99,7 @@ const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange
   );
 };
 
-export function LocationFields({ register, watch, setValue }: LocationFieldsProps) {
+export function LocationFields({ register, watch, setValue, onAddressSelect }: LocationFieldsProps) {
   const [citySearch, setCitySearch] = useState('');
   const [districtSearch, setDistrictSearch] = useState('');
   const [microdistrictSearch, setMicrodistrictSearch] = useState('');
