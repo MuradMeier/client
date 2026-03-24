@@ -31,7 +31,7 @@ export function MobileMenu() {
           <Menu className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[300px] top-[20%] translate-y-0">
+      <DialogContent className="sm:max-w-[300px] top-[20%] translate-y-0 bg-white shadow-lg border">
         <nav className="flex flex-col gap-2 mt-4">
           {links.map(({ href, label, visible }) => visible && (
             <Link
