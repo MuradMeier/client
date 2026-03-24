@@ -1,58 +1,53 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { NotificationsBell } from '@/components/NotificationsBell';
-import { MobileMenu } from './MobileMenu';
 
-export default function Header() {
+export function MobileMenu() {
+  const [open, setOpen] = useState(false);
   const { isHeadRealtor, logout } = useAuth();
 
+  const closeMenu = () => setOpen(false);
+
+  const links = [
+    { href: '/dashboard', label: 'Дашборд', visible: isHeadRealtor },
+    { href: '/objects', label: 'Объекты', visible: true },
+    { href: '/requests', label: 'Заявки', visible: true },
+    { href: '/clients', label: 'Клиенты', visible: true },
+    { href: '/meetings', label: 'Встречи', visible: true },
+    { href: '/trash', label: 'Корзина', visible: isHeadRealtor },
+    { href: '/users', label: 'Пользователи', visible: isHeadRealtor },
+    { href: '/settings/regions', label: 'Регионы', visible: isHeadRealtor },
+  ];
+
   return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <MobileMenu />
-          <Link href="/dashboard" className="text-xl font-bold">
-            Агентство CRM
-          </Link>
-        </div>
-        <nav className="hidden lg:flex items-center gap-2">
-          {isHeadRealtor && (
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">Дашборд</Button>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="lg:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64">
+        <nav className="flex flex-col gap-2 mt-8">
+          {links.map(({ href, label, visible }) => visible && (
+            <Link
+              key={href}
+              href={href}
+              onClick={closeMenu}
+              className="px-4 py-2 hover:bg-accent rounded-md"
+            >
+              {label}
             </Link>
-          )}
-          <Link href="/objects">
-            <Button variant="ghost" size="sm">Объекты</Button>
-          </Link>
-          <Link href="/requests">
-            <Button variant="ghost" size="sm">Заявки</Button>
-          </Link>
-          <Link href="/clients">
-            <Button variant="ghost" size="sm">Клиенты</Button>
-          </Link>
-          <Link href="/meetings">
-            <Button variant="ghost" size="sm">Встречи</Button>
-          </Link>
-          {isHeadRealtor && (
-            <>
-              <Link href="/trash">
-                <Button variant="ghost" size="sm">Корзина</Button>
-              </Link>
-              <Link href="/users">
-                <Button variant="ghost" size="sm">Пользователи</Button>
-              </Link>
-              <Link href="/settings/regions">
-                <Button variant="ghost" size="sm">Регионы</Button>
-              </Link>
-            </>
-          )}
-          <NotificationsBell />
-          <Button variant="ghost" size="sm" onClick={logout}>Выход</Button>
+          ))}
+          <Button variant="ghost" onClick={logout} className="justify-start">
+            Выход
+          </Button>
         </nav>
-      </div>
-    </header>
+      </SheetContent>
+    </Sheet>
   );
 }

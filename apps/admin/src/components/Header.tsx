@@ -1,4 +1,9 @@
-// Header.tsx
+'use client';
+
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { NotificationsBell } from '@/components/NotificationsBell';
 import { MobileMenu } from './MobileMenu';
 
 export default function Header() {
@@ -13,8 +18,7 @@ export default function Header() {
             Агентство CRM
           </Link>
         </div>
-        <nav className="hidden md:flex items-center gap-2">
-          {/* существующие кнопки */}
+        <nav className="hidden lg:flex items-center gap-2">
           {isHeadRealtor && (
             <Link href="/dashboard">
               <Button variant="ghost" size="sm">Дашборд</Button>
