@@ -227,7 +227,7 @@ export default function SellRentForm({ action, objectType, objectId}: SellRentFo
       )}
 
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="bg-white" p-4 sm:p-6 max-h-[90vh] overflow-y-auto>
+        <DialogContent className="bg-white p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Заполнить подробности?</DialogTitle>
             <DialogDescription>
