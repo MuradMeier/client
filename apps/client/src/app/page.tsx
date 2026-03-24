@@ -82,17 +82,17 @@ function HomeContent() {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
       <Header />
-      <main className="flex-grow container mx-auto px-4 py-12">
+      <main className="flex-grow container mx-auto px-4 py-6 sm:py-12">
         <div className="max-w-4xl mx-auto text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Найти недвижимость в Московской и Калужской областях
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-base sm:text-xl text-gray-600">
             Квартиры, дома, участки — проверенные варианты от агентства «АН САБР»
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-6 md:p-8">
+        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
               <Select onValueChange={setAction} value={action}>

@@ -113,7 +113,7 @@ export default function ObjectDetailPage() {
       <div className="container mx-auto px-4 py-8">
         <Button variant="ghost" onClick={() => router.back()} className="mb-4">← Назад</Button>
         <Skeleton className="h-8 w-64 mb-4" />
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-4 sm:gap-8">
           <Skeleton className="h-96 w-full" />
           <div className="space-y-4">
             <Skeleton className="h-8 w-full" />
@@ -142,12 +142,12 @@ export default function ObjectDetailPage() {
 
       <h1 className="text-3xl font-bold mb-4">{typeLabels[type] || type} в {object.city || ''}</h1>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-4 sm:gap-8">
         <div>
           {object.images && object.images.length > 0 ? (
             <div className="grid gap-2">
               {object.images.map((img: any, idx: number) => (
-                <div key={idx} className="relative h-64 w-full">
+                <div key={idx} className="relative h-48 sm:h-64 w-full">
                   <Image src={img.izobrazhenie} alt={`Фото ${idx+1}`} fill className="object-cover rounded-lg" />
                 </div>
               ))}
@@ -159,7 +159,7 @@ export default function ObjectDetailPage() {
 
         <div>
           <Card>
-            <CardContent className="p-6 space-y-5">
+            <CardContent className="p-4 sm:p-6 space-y-4 sm:space-y-5">
               <h2 className="text-2xl font-semibold border-b pb-2">Характеристики</h2>
               <p className="flex items-start gap-2">
                 <MapPin className="h-5 w-5 text-gray-400 shrink-0 mt-0.5" />
@@ -219,7 +219,7 @@ export default function ObjectDetailPage() {
       </div>
 
       <Dialog open={showRequestForm} onOpenChange={setShowRequestForm}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Заявка на объект</DialogTitle>
           </DialogHeader>

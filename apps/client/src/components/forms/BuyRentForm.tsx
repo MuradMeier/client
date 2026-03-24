@@ -233,7 +233,7 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
 
   return (
     <YMaps query={{ apikey: process.env.NEXT_PUBLIC_YANDEX_API_KEY || '' }}>
-      <div className="space-y-8 relative pb-20">
+      <div className="space-y-8 relative pb-28 max-h-[70vh] overflow-y-auto">
         <LocationFields register={register} watch={watch} setValue={setValue} onAddressSelect={handleAddressSelect} />
 
         {/* Блок "Параметры объекта" */}

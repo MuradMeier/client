@@ -35,3 +35,18 @@ body {
 .container {
   @apply px-4 mx-auto;
 }
+
+html, body {
+  height: 100%;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .py-8 {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
