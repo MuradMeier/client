@@ -2,35 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Базовые стили для мобильных */
 html {
   font-size: 16px;
 }
 
-body {
-  @apply bg-gray-50 text-base;
-  overflow-x: hidden;
-}
-
-/* Увеличиваем размер шрифта на очень маленьких экранах (опционально) */
+/* На очень маленьких экранах можно чуть увеличить */
 @media (max-width: 480px) {
   html {
-    font-size: 14px;
+    font-size: 18px;
   }
 }
 
-/* Увеличиваем отступы и размеры для лучшего touch-target */
+body {
+  @apply bg-gray-50 text-base;
+}
+
+/* Увеличиваем размер интерактивных элементов на мобильных */
 @media (max-width: 640px) {
-  button, a, input, select, textarea, [role="button"] {
-    min-height: 44px;
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  [role="button"],
+  .btn,
+  .select-trigger {
+    min-height: 48px;
+    font-size: 16px !important;
   }
-  .container {
+  input, select, textarea {
+    padding: 0.75rem;
+  }
+  .btn, button {
     padding-left: 1rem;
     padding-right: 1rem;
   }
 }
 
-/* Остальные стили из вашего файла */
+/* Остальные стили (не меняем) */
 input, select, textarea, button, .card, .popover-content, .select-content, .dropdown-content,
 .modal-content, dialog, [role="dialog"], [role="listbox"], [data-radix-popper-content-wrapper] {
   background-color: white !important;
@@ -58,7 +67,7 @@ input:focus, select:focus, textarea:focus, button:focus {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* Убираем горизонтальный скролл */
-html, body {
-  overflow-x: hidden;
+/* Дополнительно для SelectTrigger */
+.select-trigger {
+  min-height: 48px;
 }

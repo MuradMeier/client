@@ -212,7 +212,7 @@ export default function SellRentForm({ action, objectType, objectId }: SellRentF
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full sm:w-auto">Отправить заявку</Button>
+            <Button type="submit" className="w-full sm:w-auto h-12 text-base">Отправить заявку</Button>
           </form>
         </Form>
       ) : (
