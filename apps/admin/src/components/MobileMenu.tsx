@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -25,14 +25,14 @@ export function MobileMenu() {
   ];
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button variant="ghost" size="icon" className="lg:hidden">
           <Menu className="h-5 w-5" />
         </Button>
-      </SheetTrigger>
-      <SheetContent side="left" className="w-64">
-        <nav className="flex flex-col gap-2 mt-8">
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[300px] top-[20%] translate-y-0">
+        <nav className="flex flex-col gap-2 mt-4">
           {links.map(({ href, label, visible }) => visible && (
             <Link
               key={href}
@@ -47,7 +47,7 @@ export function MobileMenu() {
             Выход
           </Button>
         </nav>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }
