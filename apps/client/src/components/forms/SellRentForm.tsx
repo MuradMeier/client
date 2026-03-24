@@ -28,7 +28,7 @@ type BaseFormData = z.infer<typeof baseSchema>;
 interface SellRentFormProps {
   action: string;
   objectType: string;
-  objectId?: string; // ID объекта (из URL)
+  objectId?: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
@@ -67,7 +67,6 @@ export default function SellRentForm({ action, objectType, objectId }: SellRentF
   const onSubmit = (data: BaseFormData) => {
     setBaseData(data);
     if (objectId) {
-      // Если заявка с конкретного объекта — сразу открываем расширенную форму
       setShowExtended(true);
     } else {
       setShowDialog(true);

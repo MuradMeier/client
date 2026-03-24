@@ -385,7 +385,7 @@ export default function ExtendedSellRentForm({
       <h2 className="text-xl font-semibold mb-4">Подробная информация об объекте</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-          <ScrollArea className="max-h-[70vh] pr-4">
+          <ScrollArea className="pr-4">
             {/* Общие поля для всех типов */}
             <div className="space-y-4">
               <FormField
