@@ -20,6 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "CRM Агентство",
   description: "Панель управления агентством недвижимости",
+  viewport: "width=device-width, initial-scale=1.0",
 };
 
 export default function RootLayout({
