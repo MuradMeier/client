@@ -34,3 +34,7 @@ body {
 .container {
   @apply px-4 mx-auto;
 }
+
+html, body {
+  height: 100%;
+}

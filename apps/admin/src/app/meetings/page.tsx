@@ -155,7 +155,7 @@ export default function MeetingsPage() {
   ];
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 h-full flex flex-col">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Встречи</h1>
         <Link href="/meetings/new">
@@ -207,14 +207,16 @@ export default function MeetingsPage() {
         )}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Все встречи</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <DataTable columns={getColumns(isHeadRealtor)} data={meetings || []} isLoading={isLoading} />
-        </CardContent>
-      </Card>
+     <Card className="flex-1 flex flex-col">
+  <CardHeader>
+    <CardTitle>Все встречи</CardTitle>
+  </CardHeader>
+  <CardContent className="flex-1 p-0 overflow-auto">
+    <div className="overflow-x-auto h-full">
+      <DataTable columns={getColumns(isHeadRealtor)} data={meetings || []} isLoading={isLoading} className="w-full" />
+    </div>
+  </CardContent>
+</Card>
 
       {/* Диалог подтверждения удаления */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
