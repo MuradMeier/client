@@ -1,7 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-/* Те же правила для клиентской части */
+
+/* Базовые стили для мобильных */
+html {
+  font-size: 16px;
+}
+
+body {
+  @apply bg-gray-50 text-base;
+}
+
+/* Увеличиваем размер шрифта на очень маленьких экранах (опционально) */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Увеличиваем отступы и размеры для лучшего touch-target */
+@media (max-width: 640px) {
+  button, a, input, select, textarea, [role="button"] {
+    min-height: 44px;
+  }
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Остальные стили из вашего файла */
 input, select, textarea, button, .card, .popover-content, .select-content, .dropdown-content,
 .modal-content, dialog, [role="dialog"], [role="listbox"], [data-radix-popper-content-wrapper] {
   background-color: white !important;
@@ -27,26 +55,4 @@ input:focus, select:focus, textarea:focus, button:focus {
 }
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out;
-}
-
-body {
-  @apply bg-gray-50;
-}
-.container {
-  @apply px-4 mx-auto;
-}
-
-html, body {
-  height: 100%;
-}
-
-@media (max-width: 640px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  .py-8 {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-  }
 }

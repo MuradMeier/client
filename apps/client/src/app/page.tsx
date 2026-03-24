@@ -1,4 +1,3 @@
-// apps/client/src/app/page.tsx
 'use client';
 
 import { Suspense } from 'react';
@@ -83,8 +82,8 @@ function HomeContent() {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-6 sm:py-12">
-        <div className="max-w-4xl mx-auto text-center mb-12">
-          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <div className="max-w-4xl mx-auto text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Найти недвижимость в Московской и Калужской областях
           </h1>
           <p className="text-base sm:text-xl text-gray-600">
@@ -137,7 +136,7 @@ function HomeContent() {
         </div>
 
         {/* Блок с преимуществами */}
-        <div className="max-w-6xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-6xl mx-auto mt-12 sm:mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center p-6">
             <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="h-8 w-8 text-blue-600" />
@@ -167,7 +166,7 @@ function HomeContent() {
 
 export default function HomePage() {
   return (
-    <Suspense fallback={<div>Загрузка...</div>}>
+    <Suspense fallback={<div className="p-6 text-center">Загрузка...</div>}>
       <HomeContent />
     </Suspense>
   );

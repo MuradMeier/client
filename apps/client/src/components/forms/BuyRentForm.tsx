@@ -24,10 +24,6 @@ interface BuyRentFormProps {
 }
 
 export default function BuyRentForm({ action, objectType, initialValues, onSearch }: BuyRentFormProps) {
-  console.log('ObjectCard:', ObjectCard);
-  console.log('LocationFields:', LocationFields);
-  console.log('AddressSuggest:', AddressSuggest);
-
   const { register, watch, setValue, getValues, reset } = useForm({
     defaultValues: {
       region: '',
@@ -95,10 +91,7 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
   };
 
   const handleAddressSelect = (fullAddress: string, data: any) => {
-    console.log('Selected address data:', data);
     const regionCode = data.region_kladr_id?.substring(0, 2);
-    console.log('Region code:', regionCode);
-    console.log('Allowed codes:', settings?.allowed_region_codes);
     if (regionCode && !settings?.allowed_region_codes.includes(regionCode)) {
       toast.error('К сожалению, мы не работаем в данном регионе');
       setAddressInput('');
@@ -146,34 +139,34 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
     try {
       let results: SearchResult[] = [];
       if (objectType === 'Квартира' || objectType === 'Комната') {
-  let endpoint, resultMapper;
-  if (objectType === 'Квартира') {
-    endpoint = '/flats/';
-    resultMapper = (item: any) => ({
-      id: item.id,
-      type: 'flat',
-      title: `Квартира ${item.quantity_rooms}-комнатная`,
-      price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
-      area: item.home_area,
-      rooms: item.quantity_rooms,
-      address: `${item.city}, ${item.street} ${item.house_number}`,
-      image: item.images?.[0]?.izobrazhenie,
-    });
-  } else {
-    endpoint = '/rooms/';
-    resultMapper = (item: any) => ({
-      id: item.id,
-      type: 'room',
-      title: `Комната ${item.ploshad_komnaty || item.area} м²`,
-      price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
-      area: item.ploshad_komnaty || item.area,
-      address: `${item.city}, ${item.street} ${item.house_number}`,
-      image: item.images?.[0]?.izobrazhenie,
-    });
-  }
-  const res = await api.get(`${endpoint}?${params.toString()}`);
-  results = (res.data.results || res.data || []).map(resultMapper);
-} else if (objectType === 'Дом') {
+        let endpoint, resultMapper;
+        if (objectType === 'Квартира') {
+          endpoint = '/flats/';
+          resultMapper = (item: any) => ({
+            id: item.id,
+            type: 'flat',
+            title: `Квартира ${item.quantity_rooms}-комнатная`,
+            price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
+            area: item.home_area,
+            rooms: item.quantity_rooms,
+            address: `${item.city}, ${item.street} ${item.house_number}`,
+            image: item.images?.[0]?.izobrazhenie,
+          });
+        } else {
+          endpoint = '/rooms/';
+          resultMapper = (item: any) => ({
+            id: item.id,
+            type: 'room',
+            title: `Комната ${item.ploshad_komnaty || item.area} м²`,
+            price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
+            area: item.ploshad_komnaty || item.area,
+            address: `${item.city}, ${item.street} ${item.house_number}`,
+            image: item.images?.[0]?.izobrazhenie,
+          });
+        }
+        const res = await api.get(`${endpoint}?${params.toString()}`);
+        results = (res.data.results || res.data || []).map(resultMapper);
+      } else if (objectType === 'Дом') {
         const res = await api.get(`/detachedhouses/?${params.toString()}`);
         results = (res.data.results || res.data || []).map((item: any) => ({
           id: item.id,
@@ -194,12 +187,11 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
           price: action === 'Купить' ? item.predlozheniya_prodazhi?.[0]?.tsena : item.predlozheniya_arendy?.[0]?.tsena,
           area: item.land_area,
           address: `${item.city}, ${item.street} ${item.house_number || ''}`,
-          image: item.images?.[0]?.izobrazheniesu,
+          image: item.images?.[0]?.izobrazhenie,
         }));
       }
       if (isMounted.current) {
         setResults(results);
-        // Обновляем URL после успешного поиска
         if (onSearch) {
           onSearch(getValues());
         }
@@ -233,7 +225,7 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
 
   return (
     <YMaps query={{ apikey: process.env.NEXT_PUBLIC_YANDEX_API_KEY || '' }}>
-      <div className="space-y-8 relative pb-28 max-h-[70vh] overflow-y-auto">
+      <div className="space-y-8 relative pb-24">
         <LocationFields register={register} watch={watch} setValue={setValue} onAddressSelect={handleAddressSelect} />
 
         {/* Блок "Параметры объекта" */}
@@ -452,8 +444,8 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
           </div>
         )}
 
-        {isSearching && <p className="text-center">Поиск...</p>}
-        {!isSearching && results.length === 0 && <p className="text-center text-muted-foreground">Ничего не найдено</p>}
+        {isSearching && <p className="text-center py-8">Поиск...</p>}
+        {!isSearching && results.length === 0 && <p className="text-center text-muted-foreground py-8">Ничего не найдено</p>}
 
         {/* Плавающая кнопка "Найти" */}
         <div className="fixed bottom-4 right-4 z-10">
@@ -461,7 +453,7 @@ export default function BuyRentForm({ action, objectType, initialValues, onSearc
             onClick={handleSearch}
             disabled={!isSearchEnabled() || isSearching}
             size="lg"
-            className="shadow-lg"
+            className="shadow-lg px-6"
           >
             Найти
           </Button>
