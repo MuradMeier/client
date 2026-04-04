@@ -160,8 +160,7 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         const requestBody: any = {
           query: citySearch,
           count: 10,
-          from_bound: { value: 'city' },
-          to_bound: { value: 'city' },
+          to_bound: { value: 'settlement' },
         };
         if (regionCode) {
           requestBody.locations = [{ kladr_id: regionCode }];
