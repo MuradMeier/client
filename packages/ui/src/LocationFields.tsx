@@ -1,17 +1,16 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UseFormRegister, UseFormWatch, UseFormSetValue } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from './ui/command';
 import { Check, ChevronsUpDown, MapPin } from 'lucide-react';
 import { cn } from './lib/utils';
 import api from '@repo/api-client';
 import { useDebounce } from '@repo/hooks';
-import { Region, City, District, MetroStation, Microdistrict } from '@repo/types';
+import { Region, District, MetroStation, Microdistrict } from '@repo/types';
 
 interface LocationFieldsProps {
   register: UseFormRegister<any>;
@@ -20,7 +19,6 @@ interface LocationFieldsProps {
   onAddressSelect?: (fullAddress: string, data: any) => void;
 }
 
-// Компонент для подсказок адреса
 const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange: (val: string) => void; onSelect: (fullAddress: string, data: any) => void; }) => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -100,7 +98,6 @@ const AddressSuggest = ({ value, onChange, onSelect }: { value: string; onChange
 };
 
 export function LocationFields({ register, watch, setValue, onAddressSelect }: LocationFieldsProps) {
-  // Все useState в начале
   const [citySearch, setCitySearch] = useState('');
   const [cityId, setCityId] = useState<string | null>(null);
   const [districtSearch, setDistrictSearch] = useState('');
@@ -132,7 +129,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
   const debouncedMicrodistrictSearch = useDebounce(microdistrictSearch, 300);
   const debouncedMetroSearch = useDebounce(metroSearch, 300);
 
-  // Запрос регионов (ДО использования в эффекте)
   const { data: regions = [], isLoading: regionsLoading } = useQuery({
     queryKey: ['regions'],
     queryFn: async () => {
@@ -141,7 +137,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     },
   });
 
-  // При изменении региона получаем kladr_id
   useEffect(() => {
     if (region) {
       const selectedRegion = regions.find((r: Region) => String(r.id) === region);
@@ -151,7 +146,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     }
   }, [region, regions]);
 
-  // Поиск городов через DaData с kladr_id (только этот эффект, второго быть не должно)
   useEffect(() => {
     const fetchCities = async () => {
       if (!citySearch || citySearch.length < 2) {
@@ -197,15 +191,8 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     };
     const timer = setTimeout(fetchCities, 300);
     return () => clearTimeout(timer);
-  }, [citySearch, regionCode]); // только citySearch и regionCode
+  }, [citySearch, regionCode]);
 
-  // Запрос районов, микрорайонов, метро (без изменений, но они используют cityId как число — это потенциальная проблема, так как cityId сейчас хранит название, а не ID)
-  // ... (оставляем как было, но позже нужно будет исправить)
-
-  // Остальной код без изменений (сброс полей, рендер)
-}
-
-  // Запрос районов
   const { data: districts = [], isLoading: districtsLoading } = useQuery({
     queryKey: ['districts', cityId, debouncedDistrictSearch],
     queryFn: async () => {
@@ -219,7 +206,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     enabled: !!(cityId || debouncedDistrictSearch),
   });
 
-  // Запрос микрорайонов
   const { data: microdistricts = [], isLoading: microdistrictsLoading } = useQuery({
     queryKey: ['microdistricts', districtId, debouncedMicrodistrictSearch],
     queryFn: async () => {
@@ -233,7 +219,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     enabled: !!(districtId || debouncedMicrodistrictSearch),
   });
 
-  // Запрос станций метро
   const { data: metroStations = [], isLoading: metroLoading } = useQuery({
     queryKey: ['metro', cityId, debouncedMetroSearch],
     queryFn: async () => {
@@ -247,7 +232,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     enabled: !!(cityId || debouncedMetroSearch),
   });
 
-  // Сброс зависимых полей
   React.useEffect(() => {
     setValue('city', '');
     setValue('district', '');
@@ -269,88 +253,79 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     <div className="space-y-4 border p-4 rounded-lg">
       <h3 className="text-lg font-medium">Где ищем?</h3>
 
-      {/* Регион с поиском */}
       <div className="space-y-2">
         <Label>Область/регион</Label>
         <Popover open={regionOpen} onOpenChange={setRegionOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" role="combobox" aria-expanded={regionOpen} className="w-full justify-between">
-            {region ? regions.find((r: Region) => String(r.id) === region)?.nazvanie : 'Введите или выберите регион...'}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-full p-0">
-          <Command shouldFilter={false}>
-            <CommandInput placeholder="Поиск региона..." value={regionSearch} onValueChange={setRegionSearch} />
-            {regionsLoading && <CommandEmpty>Загрузка...</CommandEmpty>}
-            {!regionsLoading && regions.length === 0 && <CommandEmpty>Регионы не найдены</CommandEmpty>}
-            <CommandGroup>
-              {regions
-                .filter((r: Region) =>
-                  !regionSearch || r.nazvanie.toLowerCase().includes(regionSearch.toLowerCase())
-                )
-                .map((r: Region) => (
+          <PopoverTrigger asChild>
+            <Button variant="outline" role="combobox" aria-expanded={regionOpen} className="w-full justify-between">
+              {region ? regions.find((r: Region) => String(r.id) === region)?.nazvanie : 'Введите или выберите регион...'}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0">
+            <Command shouldFilter={false}>
+              <CommandInput placeholder="Поиск региона..." value={regionSearch} onValueChange={setRegionSearch} />
+              {regionsLoading && <CommandEmpty>Загрузка...</CommandEmpty>}
+              {!regionsLoading && regions.length === 0 && <CommandEmpty>Регионы не найдены</CommandEmpty>}
+              <CommandGroup>
+                {regions
+                  .filter((r: Region) => !regionSearch || r.nazvanie.toLowerCase().includes(regionSearch.toLowerCase()))
+                  .map((r: Region) => (
+                    <CommandItem
+                      key={r.id}
+                      value={String(r.id)}
+                      onSelect={(currentValue) => {
+                        setValue('region', currentValue);
+                        setRegionOpen(false);
+                        setRegionSearch('');
+                      }}
+                    >
+                      <Check className={cn('mr-2 h-4 w-4', region === String(r.id) ? 'opacity-100' : 'opacity-0')} />
+                      {r.nazvanie}
+                    </CommandItem>
+                  ))}
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="space-y-2">
+        <Label>Город</Label>
+        <Popover open={cityOpen} onOpenChange={setCityOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" role="combobox" aria-expanded={cityOpen} className="w-full justify-between">
+              {cityId ? citySuggestions.find(c => String(c.id) === cityId)?.nazvanie : 'Введите или выберите город...'}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-full p-0">
+            <Command shouldFilter={false}>
+              <CommandInput placeholder="Поиск города..." value={citySearch} onValueChange={setCitySearch} />
+              {isCityLoading && <CommandEmpty>Загрузка...</CommandEmpty>}
+              {!isCityLoading && citySuggestions.length === 0 && citySearch && <CommandEmpty>Города не найдены</CommandEmpty>}
+              {!isCityLoading && !citySearch && <CommandEmpty>Начните вводить название города</CommandEmpty>}
+              <CommandGroup>
+                {citySuggestions.map((c: any, idx: number) => (
                   <CommandItem
-                    key={r.id}
-                    value={String(r.id)}
-                    onSelect={(currentValue) => {
-                      setValue('region', currentValue);
-                      setRegionOpen(false);
-                      setRegionSearch('');
+                    key={idx}
+                    value={c.nazvanie}
+                    onSelect={() => {
+                      setValue('city', c.nazvanie);
+                      setCityId(c.nazvanie);
+                      setCityOpen(false);
+                      setCitySearch('');
                     }}
                   >
-                    <Check className={cn('mr-2 h-4 w-4', region === String(r.id) ? 'opacity-100' : 'opacity-0')} />
-                    {r.nazvanie}
+                    <Check className={cn('mr-2 h-4 w-4', cityId === c.nazvanie ? 'opacity-100' : 'opacity-0')} />
+                    {c.nazvanie}
                   </CommandItem>
                 ))}
-            </CommandGroup>
-          </Command>
-        </PopoverContent>
+              </CommandGroup>
+            </Command>
+          </PopoverContent>
         </Popover>
-        </div>
-
-     {/* Город */}
-<div className="space-y-2">
-  <Label>Город</Label>
-  <Popover open={cityOpen} onOpenChange={setCityOpen}>
-    <PopoverTrigger asChild>
-      <Button variant="outline" role="combobox" aria-expanded={cityOpen} className="w-full justify-between">
-        {cityId ? citySuggestions.find(c => String(c.id) === cityId)?.nazvanie : 'Введите или выберите город...'}
-        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-      </Button>
-    </PopoverTrigger>
-    <PopoverContent className="w-full p-0">
-      <Command shouldFilter={false}>
-        <CommandInput
-          placeholder="Поиск города..."
-          value={citySearch}
-          onValueChange={setCitySearch}
-        />
-        {isCityLoading && <CommandEmpty>Загрузка...</CommandEmpty>}
-        {!isCityLoading && citySuggestions.length === 0 && citySearch && <CommandEmpty>Города не найдены</CommandEmpty>}
-        {!isCityLoading && !citySearch && <CommandEmpty>Начните вводить название города</CommandEmpty>}
-        <CommandGroup>
-          {citySuggestions.map((c: any, idx: number) => (
-            <CommandItem
-              key={idx}
-              value={c.nazvanie}
-              onSelect={() => {
-                // При выборе города сохраняем его название, ID пока нет
-                setValue('city', c.nazvanie);
-                setCityId(c.nazvanie); // если нужно хранить отдельно
-                setCityOpen(false);
-                setCitySearch('');
-              }}
-            >
-              <Check className={cn('mr-2 h-4 w-4', cityId === c.nazvanie ? 'opacity-100' : 'opacity-0')} />
-              {c.nazvanie}
-            </CommandItem>
-          ))}
-        </CommandGroup>
-      </Command>
-    </PopoverContent>
-  </Popover>
-</div>\
+      </div>
 
       {cityId && (
         <div className="space-y-2">
@@ -359,7 +334,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {/* Район */}
       {(cityId || districtSearch) && (
         <div className="space-y-2">
           <Label>Район</Label>
@@ -397,7 +371,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {/* Микрорайон */}
       {(districtId || microdistrictSearch) && (
         <div className="space-y-2">
           <Label>Микрорайон</Label>
@@ -435,7 +408,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {/* Метро */}
       {(cityId || metroSearch) && (
         <div className="space-y-2">
           <Label>Метро</Label>
@@ -473,20 +445,19 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {/* Точный адрес с подсказками */}
-        <div className="space-y-2">
-    <Label>Точный адрес</Label>
-    <AddressSuggest
-      value={exactAddress}
-      onChange={(val) => setValue('exactAddress', val)}
-      onSelect={(val, data) => {
-        if (onAddressSelect) {
-          onAddressSelect(val, data); // вызываем внешний обработчик, если передан
-        } else {
-          setValue('exactAddress', val); // поведение по умолчанию
-        }
-      }}
-    />
+      <div className="space-y-2">
+        <Label>Точный адрес</Label>
+        <AddressSuggest
+          value={exactAddress}
+          onChange={(val) => setValue('exactAddress', val)}
+          onSelect={(val, data) => {
+            if (onAddressSelect) {
+              onAddressSelect(val, data);
+            } else {
+              setValue('exactAddress', val);
+            }
+          }}
+        />
       </div>
 
       {exactAddress && (
