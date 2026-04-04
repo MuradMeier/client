@@ -103,7 +103,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
   const [districtSearch, setDistrictSearch] = useState('');
   const [cityType, setCityType] = useState<string>('');
   const [isCity, setIsCity] = useState<boolean>(false);
-  const [isCityLoading, setIsCityLoading] = useState(false);
   const [regionSearch, setRegionSearch] = useState('');
   const [regionOpen, setRegionOpen] = useState(false);
   const [microdistrictSearch, setMicrodistrictSearch] = useState('');
