@@ -89,13 +89,10 @@ export default function SellRentForm({ action, objectType, objectId}: SellRentFo
         status: 'new',
         extended_data: extendedData,
         agreed_to_pd: true,
-      }),
+      });
       toast.success('Заявка отправлена');
-      setShowDialog(false);
-      form.reset();
     } catch (error) {
       toast.error('Ошибка при отправке');
-      console.error(error);
     }
   };
 
@@ -120,13 +117,10 @@ export default function SellRentForm({ action, objectType, objectId}: SellRentFo
         status: 'new',
         extended_data: extendedData,
         agreed_to_pd: true,                          // добавлено
-      }),
+      });
       toast.success('Заявка отправлена');
-      setShowExtended(false);
-      form.reset();
     } catch (error) {
       toast.error('Ошибка при отправке');
-      console.error(error);
     }
   };
 
