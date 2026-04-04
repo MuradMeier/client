@@ -90,7 +90,6 @@ export default function SellRentForm({ action, objectType, objectId}: SellRentFo
         extended_data: extendedData,
         agreed_to_pd: true,
       }),
-});
       toast.success('Заявка отправлена');
       setShowDialog(false);
       form.reset();
@@ -122,7 +121,6 @@ export default function SellRentForm({ action, objectType, objectId}: SellRentFo
         extended_data: extendedData,
         agreed_to_pd: true,                          // добавлено
       }),
-    });
       toast.success('Заявка отправлена');
       setShowExtended(false);
       form.reset();
