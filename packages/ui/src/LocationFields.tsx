@@ -124,13 +124,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
   const debouncedMetroSearch = useDebounce(metroSearch, 300);
 
   // Запрос регионов
-  const { data: regions = [] } = useQuery({
-    queryKey: ['regions'],
-    queryFn: async () => {
-      const res = await api.get('/regions/');
-      return res.data.results || res.data || [];
-    },
-  });
   const { data: regions = [], isLoading: regionsLoading } = useQuery({
       queryKey: ['regions'],
       queryFn: async () => {
