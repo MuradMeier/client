@@ -112,7 +112,8 @@ export default function ExtendedSellRentForm({
   onCancel,
   onSubmit
 }: ExtendedSellRentFormProps) {
-    const settings = useSettings(); // <-- добавить
+  const settings = useSettings(); // оставляем только для скелетона
+
   // Динамически создаём схему в зависимости от action и objectType
   const schema = useMemo(() => {
     const baseExtendedSchema = z.object({
@@ -319,16 +320,7 @@ export default function ExtendedSellRentForm({
 
   const handleAddressSelect = (fullAddress: string, data: any) => {
       console.log('Selected address data:', data);
-      const regionCode = data.region_kladr_id?.substring(0, 2);
-      console.log('Region code:', regionCode);
-      console.log('Allowed codes:', settings?.allowed_region_codes);
-      if (regionCode && !settings?.allowed_region_codes.includes(regionCode)) {
-        toast.error('К сожалению, мы не работаем в данном регионе');
-        setAddressInput('');
-        setSelectedAddress(null);
-        form.setValue('address', '');
-        return;
-      }
+      // Удалена проверка на разрешённые регионы
       setAddressInput(fullAddress);
       setSelectedAddress(data);
       form.setValue('address', fullAddress);
