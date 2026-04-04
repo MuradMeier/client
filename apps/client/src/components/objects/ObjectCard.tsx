@@ -11,15 +11,17 @@ interface ObjectCardProps {
   item: SearchResult;
   filterAction?: string;
   filterObjectType?: string;
-  filterParams?: Record<string, any>;
+  filterParams?: Record<string, any>; // добавили
 }
 
 export default function ObjectCard({ item, filterAction, filterObjectType, filterParams }: ObjectCardProps) {
+  console.log('ObjectCard item:', JSON.stringify(item, null, 2));
   const formattedDate = item.created_at
     ? format(new Date(item.created_at), 'dd.MM.yyyy', { locale: ru })
     : null;
   const imageUrl = item.image || (item as any).images?.[0]?.izobrazhenie;
 
+  // Формируем ссылку с параметрами фильтров
   const query = new URLSearchParams();
   if (filterAction) query.set('action', filterAction);
   if (filterObjectType) query.set('objectType', filterObjectType);
@@ -44,32 +46,32 @@ export default function ObjectCard({ item, filterAction, filterObjectType, filte
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-400 text-sm sm:text-base">
+          <div className="flex items-center justify-center h-full text-gray-400">
             Нет фото
           </div>
         )}
       </div>
-      <CardContent className="p-4 sm:p-5">
-        <h3 className="font-semibold text-base sm:text-lg mb-1 line-clamp-1">{item.title}</h3>
-        <p className="text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3 line-clamp-2">
+      <CardContent className="p-5">
+        <h3 className="font-semibold text-lg mb-1 line-clamp-1">{item.title}</h3>
+        <p className="text-sm text-gray-500 mb-3 line-clamp-2">
           {item.address}
           {item.apartment_number && `, кв. ${item.apartment_number}`}
         </p>
-        <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3">
+        <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
           {item.area && (
             <span className="flex items-center gap-1">
-              <Square className="h-3 w-3 sm:h-4 sm:w-4" />
+              <Square className="h-4 w-4" />
               {item.area} м²
             </span>
           )}
           {item.rooms && (
             <span className="flex items-center gap-1">
-              <Bed className="h-3 w-3 sm:h-4 sm:w-4" />
+              <Bed className="h-4 w-4" />
               {item.rooms} ком.
             </span>
           )}
         </div>
-        <p className="text-xl sm:text-2xl font-bold text-blue-600">
+        <p className="text-2xl font-bold text-blue-600">
           {item.price ? `${item.price.toLocaleString()} ₽` : 'Цена не указана'}
         </p>
         {formattedDate && (
@@ -79,9 +81,9 @@ export default function ObjectCard({ item, filterAction, filterObjectType, filte
           </p>
         )}
       </CardContent>
-      <CardFooter className="p-4 sm:p-5 pt-0">
+      <CardFooter className="p-5 pt-0">
         <Link href={href} passHref className="w-full">
-          <Button variant="outline" className="w-full border-blue-200 hover:bg-blue-50 text-sm sm:text-base">
+          <Button variant="outline" className="w-full border-blue-200 hover:bg-blue-50">
             Подробнее
           </Button>
         </Link>

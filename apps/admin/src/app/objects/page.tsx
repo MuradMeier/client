@@ -151,7 +151,7 @@ export default function ObjectsPage() {
   };
 
   return (
-    <div className="space-y-6 p-6 h-full flex flex-col">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Объекты недвижимости</h1>
         <Link href="/objects/new">

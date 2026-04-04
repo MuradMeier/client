@@ -77,57 +77,59 @@ const handleHardDelete = async (type: string, id: number) => {
   if (isLoading) return <Skeleton className="h-96 w-full" />;
 
   return (
-    <div className="p-6 space-y-6 h-full flex flex-col">
+    <div className="p-6 space-y-6">
       <h1 className="text-3xl font-bold">Корзина</h1>
-      <Card className="flex-1 flex flex-col">
-  <CardHeader>
-    <CardTitle>Удалённые объекты</CardTitle>
-  </CardHeader>
-  <CardContent className="flex-1 p-0 overflow-auto">
-    <div className="overflow-x-auto h-full">
-      {trash?.length ? (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Тип</TableHead>
-              <TableHead>Объект</TableHead>
-              <TableHead>Дата удаления</TableHead>
-              <TableHead>Удалил</TableHead>
-              <TableHead className="text-right">Действия</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {trash.map((item: any) => (
-              <TableRow key={item.id}>
-                <TableCell>#{item.id}</TableCell>
-                <TableCell>{item.tip_obekta}</TableCell>
-                <TableCell>{item.predstavlenie}</TableCell>
-                <TableCell>{format(new Date(item.data_udaleniya), 'dd.MM.yyyy HH:mm', { locale: ru })}</TableCell>
-                <TableCell>{item.udalil || '—'}</TableCell>
-                <TableCell className="text-right space-x-2">
-                  <Button size="sm" variant="outline" onClick={() => handleRestore(item.tip_obekta, item.id)}>
-                    Восстановить
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="text-red-600 hover:bg-red-50"
-                    onClick={() => handleHardDelete(item.tip_obekta, item.id)}
-                  >
-                    Удалить навсегда
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <p className="text-muted-foreground">Корзина пуста</p>
-      )}
-    </div>
-  </CardContent>
-</Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Удалённые объекты</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {trash?.length ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Тип</TableHead>
+                  <TableHead>Объект</TableHead>
+                  <TableHead>Дата удаления</TableHead>
+                  <TableHead>Удалил</TableHead>
+                  <TableHead className="text-right">Действия</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {trash.map((item: any) => (
+                  <TableRow key={item.id}>
+                    <TableCell>#{item.id}</TableCell>
+                    <TableCell>{item.tip_obekta}</TableCell>
+                    <TableCell>{item.predstavlenie}</TableCell>
+                    <TableCell>{format(new Date(item.data_udaleniya), 'dd.MM.yyyy HH:mm', { locale: ru })}</TableCell>
+                    <TableCell>{item.udalil || '—'}</TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleRestore(item.tip_obekta, item.id)}
+                      >
+                        Восстановить
+                      </Button>
+                      <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 hover:bg-red-50"
+                      onClick={() => handleHardDelete(item.tip_obekta, item.id)}
+                    >
+                      Удалить навсегда
+                    </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-muted-foreground">Корзина пуста</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

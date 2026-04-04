@@ -184,7 +184,7 @@ export default function RequestsPage() {
   ];
 
   return (
-    <div className="space-y-6 p-6 h-full flex flex-col">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Заявки</h1>
         <Button onClick={() => setQuickModalOpen(true)}>
@@ -267,16 +267,14 @@ export default function RequestsPage() {
   </Select>
 )}
 
-      <Card className="flex-1 flex flex-col">
-  <CardHeader>
-    <CardTitle>Все заявки</CardTitle>
-  </CardHeader>
-  <CardContent className="flex-1 p-0 overflow-auto">
-    <div className="overflow-x-auto h-full">
-      <DataTable columns={columns} data={requests || []} isLoading={isLoading} className="w-full" />
-    </div>
-  </CardContent>
-</Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Все заявки</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={requests || []} isLoading={isLoading} />
+        </CardContent>
+      </Card>
 
       <QuickRequestModal open={quickModalOpen} onOpenChange={setQuickModalOpen} />
 

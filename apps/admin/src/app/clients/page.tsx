@@ -11,6 +11,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -101,13 +102,13 @@ export default function ClientsPage() {
       const res = await api.get('/users/?page_size=1000');
       const users = res.data.results || res.data || [];
       return users.filter((u: any) =>
-        u.groups?.some((g: any) => g === 1 || g === 2)
+        u.groups?.some((g: any) => g === 1 || g === 2)  // предполагаем ID групп
       );
     },
     enabled: isHeadRealtor,
   });
 
-  const { data: clients, isLoading } = useQuery({
+    const { data: clients, isLoading } = useQuery({
     queryKey: ['clients', search, realtorFilter],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -139,7 +140,7 @@ export default function ClientsPage() {
   };
 
   return (
-    <div className="space-y-6 p-6 h-full flex flex-col">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Клиенты</h1>
         <Link href="/clients/new">
@@ -160,7 +161,7 @@ export default function ClientsPage() {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {isHeadRealtor && (
+                {isHeadRealtor && (
           <Select value={realtorFilter} onValueChange={setRealtorFilter}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Ответственный" />
@@ -177,19 +178,16 @@ export default function ClientsPage() {
         )}
       </div>
 
-      <Card className="flex-1 flex flex-col">
+      <Card>
         <CardHeader>
           <CardTitle>Все клиенты</CardTitle>
         </CardHeader>
-        <CardContent className="flex-1 p-0 overflow-auto">
-          <div className="overflow-x-auto h-full">
-            <DataTable
-              columns={columns(handleDeleteClick)}
-              data={clients || []}
-              isLoading={isLoading}
-              className="w-full"
-            />
-          </div>
+        <CardContent>
+          <DataTable
+            columns={columns(handleDeleteClick)}
+            data={clients || []}
+            isLoading={isLoading}
+          />
         </CardContent>
       </Card>
 

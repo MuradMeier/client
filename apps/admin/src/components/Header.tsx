@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { NotificationsBell } from '@/components/NotificationsBell';
-import { MobileMenu } from './MobileMenu';
 
 export default function Header() {
   const { isHeadRealtor, logout } = useAuth();
@@ -12,18 +11,15 @@ export default function Header() {
   return (
     <header className="border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <MobileMenu />
-          <Link href="/dashboard" className="text-xl font-bold">
-            Агентство CRM
-          </Link>
-        </div>
-        <nav className="hidden lg:flex items-center gap-2">
+        <Link href="/dashboard" className="text-xl font-bold">
+          Агентство CRM
+        </Link>
+        <nav className="flex items-center gap-2">
           {isHeadRealtor && (
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm">Дашборд</Button>
-            </Link>
-          )}
+          <Link href="/dashboard">
+            <Button variant="ghost" size="sm">Дашборд</Button>
+          </Link>
+        )}
           <Link href="/objects">
             <Button variant="ghost" size="sm">Объекты</Button>
           </Link>
@@ -50,7 +46,9 @@ export default function Header() {
             </>
           )}
           <NotificationsBell />
-          <Button variant="ghost" size="sm" onClick={logout}>Выход</Button>
+          <Button variant="ghost" size="sm" onClick={logout}>
+            Выход
+          </Button>
         </nav>
       </div>
     </header>

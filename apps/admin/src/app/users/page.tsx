@@ -128,22 +128,20 @@ export default function UsersPage() {
   if (isLoading) return <Skeleton className="h-96 w-full" />;
 
   return (
-    <div className="p-6 space-y-6 h-full flex flex-col">
+    <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold">Пользователи</h1>
         <Button onClick={() => setOpen(true)}>Добавить пользователя</Button>
       </div>
 
-      <Card className="flex-1 flex flex-col">
-  <CardHeader>
-    <CardTitle>Все пользователи</CardTitle>
-  </CardHeader>
-  <CardContent className="flex-1 p-0 overflow-auto">
-    <div className="overflow-x-auto h-full">
-      <DataTable columns={columns} data={users || []} isLoading={isLoading} className="w-full" />
-    </div>
-  </CardContent>
-</Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Все пользователи</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DataTable columns={columns} data={users || []} isLoading={isLoading} />
+        </CardContent>
+      </Card>
 
       <UserDialog
         open={open || !!editingUser}
