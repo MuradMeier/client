@@ -101,6 +101,10 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
   const [citySearch, setCitySearch] = useState('');
   const [cityId, setCityId] = useState<string | null>(null);
   const [districtSearch, setDistrictSearch] = useState('');
+  const [citySuggestions, setCitySuggestions] = useState<any[]>([]);
+  const [cityType, setCityType] = useState<string>('');
+  const [isCity, setIsCity] = useState<boolean>(false);
+  const [isCityLoading, setIsCityLoading] = useState(false);
   const [regionSearch, setRegionSearch] = useState('');
   const [regionOpen, setRegionOpen] = useState(false);
   const [microdistrictSearch, setMicrodistrictSearch] = useState('');
@@ -176,12 +180,13 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         body: JSON.stringify(requestBody),
       });
       const data = await response.json();
-      let suggestions = (data.suggestions || [])
-        .filter((s: any) => s.data.city || s.data.settlement) // отсекаем районы и области
-        .map((s: any) => ({
-          id: null,
-          nazvanie: s.data.settlement || s.data.city || s.value.split(',')[0],
-        }));
+      const suggestions = (data.suggestions || [])
+  .filter((s: any) => s.data.city || s.data.settlement) // убираем районы
+  .map((s: any) => ({
+    id: null,
+    nazvanie: s.data.settlement || s.data.city || s.value.split(',')[0],
+    type: s.data.city_type_full || s.data.settlement_type_full || '',
+  }));
       setCitySuggestions(suggestions);
     } catch (error) {
       console.error('DaData error', error);
@@ -238,6 +243,8 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
     setValue('district', '');
     setValue('microdistrict', '');
     setValue('metro', '');
+    setIsCity(false);
+    setCityType('');
   }, [region, setValue]);
 
   React.useEffect(() => {
@@ -314,6 +321,8 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
                     onSelect={() => {
                       setValue('city', c.nazvanie);
                       setCityId(c.nazvanie);
+                      setCityType(c.type);
+                      setIsCity(c.type === 'город' || c.type === 'пгт');
                       setCityOpen(false);
                       setCitySearch('');
                     }}
@@ -335,7 +344,7 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {(cityId || districtSearch) && (
+      {isCity && (cityId || districtSearch) && (
         <div className="space-y-2">
           <Label>Район</Label>
           <Popover open={districtOpen} onOpenChange={setDistrictOpen}>
@@ -372,7 +381,7 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {(districtId || microdistrictSearch) && (
+      {isCity && (districtId || microdistrictSearch) && (
         <div className="space-y-2">
           <Label>Микрорайон</Label>
           <Popover open={microdistrictOpen} onOpenChange={setMicrodistrictOpen}>
@@ -409,7 +418,7 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         </div>
       )}
 
-      {(cityId || metroSearch) && (
+      {isCity && (cityId || metroSearch) && (
         <div className="space-y-2">
           <Label>Метро</Label>
           <Popover open={metroOpen} onOpenChange={setMetroOpen}>
