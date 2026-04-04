@@ -375,6 +375,9 @@ export default function ExtendedSellRentForm({
   return (
     <div className="bg-white border rounded-lg p-6 shadow-sm">
       <h2 className="text-xl font-semibold mb-4">Подробная информация об объекте</h2>
+      <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4 text-sm text-blue-800">
+  Все поля формы необязательны. Заполните только те, которые хотите указать.
+</div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
           <ScrollArea className="h-[60vh] pr-4">
