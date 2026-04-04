@@ -341,7 +341,6 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
         }
       }}
     >
-                  >
                     <Check className={cn('mr-2 h-4 w-4', cityId === c.nazvanie ? 'opacity-100' : 'opacity-0')} />
                     {c.nazvanie}
                   </CommandItem>
