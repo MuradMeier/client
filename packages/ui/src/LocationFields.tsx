@@ -147,50 +147,52 @@ export function LocationFields({ register, watch, setValue, onAddressSelect }: L
   }, [region, regions]);
 
   useEffect(() => {
-    const fetchCities = async () => {
-      if (!citySearch || citySearch.length < 2) {
-        setCitySuggestions([]);
-        return;
+  const fetchCities = async () => {
+    if (!citySearch || citySearch.length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
+    setIsCityLoading(true);
+    try {
+      const apiKey = process.env.NEXT_PUBLIC_DADATA_API_KEY;
+      if (!apiKey) throw new Error('No DaData key');
+
+      const requestBody: any = {
+        query: citySearch,
+        count: 10,
+        to_bound: { value: 'settlement' },
+      };
+      if (regionCode) {
+        requestBody.locations = [{ kladr_id: regionCode }];
       }
-      setIsCityLoading(true);
-      try {
-        const apiKey = process.env.NEXT_PUBLIC_DADATA_API_KEY;
-        if (!apiKey) throw new Error('No DaData key');
 
-        const requestBody: any = {
-          query: citySearch,
-          count: 10,
-          to_bound: { value: 'settlement' },
-        };
-        if (regionCode) {
-          requestBody.locations = [{ kladr_id: regionCode }];
-        }
-
-        const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            Authorization: `Token ${apiKey}`,
-          },
-          body: JSON.stringify(requestBody),
-        });
-        const data = await response.json();
-        const suggestions = (data.suggestions || []).map((s: any) => ({
+      const response = await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Token ${apiKey}`,
+        },
+        body: JSON.stringify(requestBody),
+      });
+      const data = await response.json();
+      let suggestions = (data.suggestions || [])
+        .filter((s: any) => s.data.city || s.data.settlement) // отсекаем районы и области
+        .map((s: any) => ({
           id: null,
-          nazvanie: s.data.city || s.value.split(',')[0],
+          nazvanie: s.data.settlement || s.data.city || s.value.split(',')[0],
         }));
-        setCitySuggestions(suggestions);
-      } catch (error) {
-        console.error('DaData error', error);
-        setCitySuggestions([]);
-      } finally {
-        setIsCityLoading(false);
-      }
-    };
-    const timer = setTimeout(fetchCities, 300);
-    return () => clearTimeout(timer);
-  }, [citySearch, regionCode]);
+      setCitySuggestions(suggestions);
+    } catch (error) {
+      console.error('DaData error', error);
+      setCitySuggestions([]);
+    } finally {
+      setIsCityLoading(false);
+    }
+  };
+  const timer = setTimeout(fetchCities, 300);
+  return () => clearTimeout(timer);
+}, [citySearch, regionCode]);
 
   const { data: districts = [], isLoading: districtsLoading } = useQuery({
     queryKey: ['districts', cityId, debouncedDistrictSearch],
